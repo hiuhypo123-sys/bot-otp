@@ -31,7 +31,7 @@
         <h2>Nhiệm Vụ Lấy Mã OTP</h2>
         <p>Vui lòng chờ hết thời gian đếm ngược để hệ thống kích hoạt nút lấy mã xác minh.</p>
         
-        <div id="timer" class="countdown">Thời gian còn lại: 60 giây</div>
+        <div id="timer" class="countdown">Thời gian còn lại: 3 giây</div>
         
         <button id="action-btn" class="btn" disabled onclick="generateOTP()">Bấm Để Nhận Mã</button>
         
@@ -80,7 +80,7 @@
         let calculatedCode = (parseInt(userId) * 3) + 2468;
         
         // Hiển thị mã OTP ra màn hình
-        otpCodeEl.innerText = `LUC-${calculatedCode}`;
+        otpCodeEl.innerText = `-${calculatedCode}`;
         otpArea.style.display = 'block';
         
         // Ẩn nút bấm đi để tránh người dùng click nhiều lần
