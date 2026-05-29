@@ -43,7 +43,7 @@
 </div>
 
 <script>
-    let timeLeft = 3; // Bạn có thể sửa số giây chờ tại đây (ví dụ: 15, 30, 60...)
+    let timeLeft = 3; // Thời gian đếm ngược 3 giây
     const timerEl = document.getElementById('timer');
     const btnEl = document.getElementById('action-btn');
     const errorArea = document.getElementById('error-area');
@@ -51,39 +51,32 @@
     const otpArea = document.getElementById('otp-area');
     const otpCodeEl = document.getElementById('otp-code');
 
-    // 1. Lấy tham số ?id= từ trên URL thanh địa chỉ
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('id');
 
-    // Kiểm tra xem có ID hợp lệ không
     if (!userId || isNaN(userId)) {
         mainArea.style.display = 'none';
         errorArea.style.display = 'block';
     } else {
-        // Bắt đầu đếm ngược nếu có ID chuẩn
         const countdown = setInterval(() => {
             timeLeft--;
             timerEl.innerText = `Thời gian còn lại: ${timeLeft} giây`;
             
             if (timeLeft <= 0) {
                 clearInterval(countdown);
-                timerEl.style.display = 'none'; // Ẩn dòng chữ đếm ngược
-                btnEl.removeAttribute('disabled'); // Mở khóa nút bấm lấy mã
+                timerEl.style.display = 'none';
+                btnEl.removeAttribute('disabled');
             }
         }, 1000);
     }
 
-    // 2. Hàm tính toán và hiển thị mã OTP ngẫu nhiên dựa trên ID
     function generateOTP() {
-        // CÔNG THỨC TOÁN HỌC BÍ MẬT: Lấy ID từ Bot nhân với 3 rồi cộng thêm 2468
-        // (Bạn nhớ cài đặt công thức này y hệt bên phía code của con Bot Telegram nhé)
-        let calculatedCode = (parseInt(userId) * 3) + 2468;
+        // Tính toán đúng theo công thức của Bot: LUC + mã số
+        let codeNumber = (parseInt(userId) * 3) + 2468;
         
-        // Hiển thị mã OTP ra màn hình
-        otpCodeEl.innerText = `-${calculatedCode}`;
+        // Hiển thị mã đầy đủ có chữ "LUC-"
+        otpCodeEl.innerText = `LUC-${codeNumber}`;
         otpArea.style.display = 'block';
-        
-        // Ẩn nút bấm đi để tránh người dùng click nhiều lần
         btnEl.style.display = 'none';
     }
 </script>
