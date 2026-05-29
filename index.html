@@ -1,14 +1,64 @@
-def check_otp(message):
-    user_id = message.from_user.id
-    # Dùng abs(user_id) để luôn lấy giá trị dương, tránh lỗi số âm
-    safe_id = abs(user_id) 
-    
-    user_input = message.text.strip().upper()
-    # Công thức đồng bộ: LUC- + (ID * 3 + 2468)
-    correct_otp = f"LUC-{(safe_id * 3) + 2468}"
-    
-    if user_input == correct_otp:
-        add_reward(user_id, 300)
-        bot.reply_to(message, "🎉 Thành công! +300đ đã vào ví.")
-    else:
-        bot.reply_to(message, f"❌ Mã sai rồi! (Mã bạn nhập: {user_input}). Bấm /nhiemvu để thử lại.")
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lấy Mã Xác Minh Bot</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { background-color: #1e1e1e; padding: 30px; border-radius: 12px; max-width: 450px; width: 100%; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 1px solid #333; }
+        h2 { color: #ffffff; margin-bottom: 15px; font-size: 22px; }
+        .countdown { font-size: 18px; color: #ff4757; font-weight: bold; margin-bottom: 20px; background: rgba(255, 71, 87, 0.1); padding: 10px; border-radius: 8px; display: inline-block; width: 100%; }
+        .btn { background-color: #00ea8c; color: #121212; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; width: 100%; }
+        .btn:disabled { background-color: #444; color: #888; cursor: not-allowed; }
+        .otp-box { margin-top: 25px; padding: 15px; background-color: #2a2a2a; border-radius: 8px; border: 1px dashed #00ea8c; display: none; }
+        .otp-code { font-size: 26px; font-weight: bold; color: #00ea8c; margin-top: 10px; }
+        .error-msg { color: #ff4757; display: none; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div id="error-area" class="error-msg">⚠️ LỖI: Không tìm thấy ID.</div>
+    <div id="main-area">
+        <h2>Nhiệm Vụ Lấy Mã OTP</h2>
+        <div id="timer" class="countdown">Thời gian còn lại: 3 giây</div>
+        <button id="action-btn" class="btn" disabled onclick="generateOTP()">Bấm Để Nhận Mã</button>
+        <div id="otp-area" class="otp-box">
+            <div>Mã OTP của bạn là:</div>
+            <div id="otp-code" class="otp-code">---</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let timeLeft = 3; 
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get('id');
+
+    if (!userId || isNaN(userId)) {
+        document.getElementById('main-area').style.display = 'none';
+        document.getElementById('error-area').style.display = 'block';
+    } else {
+        const countdown = setInterval(() => {
+            timeLeft--;
+            document.getElementById('timer').innerText = `Thời gian còn lại: ${timeLeft} giây`;
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                document.getElementById('timer').style.display = 'none';
+                document.getElementById('action-btn').removeAttribute('disabled');
+            }
+        }, 1000);
+    }
+
+    function generateOTP() {
+        // Đồng bộ: Dùng Math.abs để chuyển sang số dương giống Python
+        let safeId = Math.abs(parseInt(userId));
+        let code = (safeId * 3) + 2468;
+        document.getElementById('otp-code').innerText = `LUC-${code}`;
+        document.getElementById('otp-area').style.display = 'block';
+        document.getElementById('action-btn').style.display = 'none';
+    }
+</script>
+</body>
+</html>
